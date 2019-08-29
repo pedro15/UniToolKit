@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 /// </summary>
 public static class XMLSerializer
 {
-
     public static void SerializeXML(object obj, string FilePath, bool IsEncrypted = false)
     {
         XmlSerializer ser = new XmlSerializer(obj.GetType());

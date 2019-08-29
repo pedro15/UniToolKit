@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using UniToolkit.Security;
-using UnityEngine;
+using UniToolkit.Serialization.Json;
 
 namespace UniToolkit.Serialization
 {
@@ -15,17 +15,17 @@ namespace UniToolkit.Serialization
         public static string SerializeToJson(object obj, bool IsEncrypted = false)
         {
             if (IsEncrypted)
-                return EncryptionUtility.EncryptString(JsonUtility.ToJson(obj));
+                return EncryptionUtility.EncryptString(JsonSystem.ToJSON(obj));
             else
-                return JsonUtility.ToJson(obj);
+                return JsonSystem.ToJSON(obj);
         }
 
         public static T DeserializeFromJson<T>(string Json, bool IsEncrypted = false)
         {
             if (IsEncrypted)
-                return JsonUtility.FromJson<T>(EncryptionUtility.DecryptString(Json));
+                return JsonSystem.FromJSON<T>(EncryptionUtility.DecryptString(Json));
             else
-                return JsonUtility.FromJson<T>(Json);
+                return JsonSystem.FromJSON<T>(Json);
         }
 
         public static void SerializeToFile(object obj, string FilePath, bool IsEncrypted = false)
