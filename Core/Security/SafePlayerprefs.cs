@@ -86,6 +86,22 @@ namespace UniToolkit.Security
             return Color.clear;
         }
 
+        public static Quaternion GetQuaternion(string Key)
+        {
+            string k = EncryptionUtility.EncryptString(Key);
+            if (PlayerPrefs.HasKey(k))
+            {
+                string json = PlayerPrefs.GetString(k, string.Empty);
+                return Quaternion.Euler(JSONSerializer.DeserializeFromJson<Vector3>(json, true));
+            }
+            return Quaternion.identity;
+        }
+
+        public static void SetQuaternion(string Key , Quaternion value)
+        {
+            SetVector3(Key, value.eulerAngles);
+        }
+
         //---
 
         public static bool HasKey (string key)
