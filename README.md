@@ -1,6 +1,6 @@
-[![GitHub license](https://img.shields.io/github/license/pedro15/UniToolKit)](https://github.com/pedro15/UniToolKit/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/pedro15/UniToolKit)](https://github.com/pedro15/UniToolKit/blob/master/LICENSE.svg)
 
-[![Paypal Donate](https://img.shields.io/badge/Paypal-Donate-blue)](https://www.paypal.me/pedrojdm/5)
+[![Paypal Donate](https://img.shields.io/badge/Paypal-Donate-blue.svg)](https://www.paypal.me/pedrojdm/5)
 
 # UniToolKit
 Utility toolbox for unity game development.
