@@ -1,0 +1,17 @@
+{
+    "name": "UniToolkit-Editor",
+    "references": [
+        "GUID:3ca9f30eba4fa864e8e7961c2c1017f5"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

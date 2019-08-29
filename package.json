@@ -1,0 +1,42 @@
+{
+  "displayName": "UniToolkit",
+  "category": "Unity",
+  "description": "Utility toolbox for unity game development.",
+  "author": {
+    "name": "Pedro Duran",
+    "url": "https://github.com/pedro15"
+  },
+  "keywords": [
+    "Utility",
+    "serialization",
+    "encryption",
+    "security",
+    "protection",
+    "singleton"
+  ],
+  "name": "com.github.pedro15.unitoolkit",
+  "samples": [
+    {
+      "displayName": "Safe PlayerPrefs",
+      "path": "Samples~/1 - SafePlayerPrefs"
+    },
+    {
+      "displayName": "Safe Structs",
+      "path": "Samples~/2 - Safestructs"
+    },
+    {
+      "displayName": "Serialization",
+      "path": "Samples~/3 - Serialization"
+    },
+    {
+      "displayName": "Singleton",
+      "path": "Samples~/4 - Singleton"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pedro15/UniToolkit.git"
+  },
+  "unity": "2017.4",
+  "version": "1.0.0"
+}
