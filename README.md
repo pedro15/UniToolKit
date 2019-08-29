@@ -1,5 +1,5 @@
-<div align="center">
-    <a href="https://github.com/pedro15/UniToolKit/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/pedro15/UniToolKit.svg"></a>
+<div>
+    <a href="https://github.com/pedro15/UniToolKit/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/pedro15/UniToolKit"></a>
     <a href="https://www.paypal.me/pedrojdm/5"><img alt="Paypal Donate" src="https://img.shields.io/badge/Paypal-Donate-blue.svg"></a>
 </div>
 
