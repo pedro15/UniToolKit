@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Reflection;
 
 namespace UniToolkit.Utility
 {
@@ -10,18 +11,11 @@ namespace UniToolkit.Utility
     {
         private static T eInstance;
 
-        [SerializeField,Tooltip("This GameObject should be persistent between scenes ?")]
-        private bool Persistent = false;
-        
-        protected virtual void Awake()
+        protected virtual bool Persistent
         {
-            eInstance = null;
-            if (Persistent)
-            {
-                DontDestroyOnLoad(gameObject);
-            }
+            get { return false; }
         }
-        
+
         public static T Instance
         {
             get
@@ -29,9 +23,33 @@ namespace UniToolkit.Utility
                 if (!eInstance)
                 {
                     eInstance = FindObjectOfType<T>();
+
+                    if (!eInstance)
+                    {
+                        SingletonPrefabAttribute m_prefab = typeof(T).GetCustomAttribute<SingletonPrefabAttribute>(true);
+                        if (m_prefab != null && !string.IsNullOrEmpty(m_prefab.PrefabPath))
+                        {
+                            eInstance = Instantiate(Resources.Load<GameObject>(m_prefab.PrefabPath)).GetComponent<T>();
+                        }
+                    }
                 }
                 return eInstance;
             }
         }
+
+        protected virtual void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+
+            if (Persistent)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+            eInstance = GetComponent<T>();
+        }
+
     }
 }

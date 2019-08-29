@@ -7,7 +7,6 @@ namespace UniToolkitEditor
     [CustomPropertyDrawer(typeof(SafeBool))]
     public class SafeBoolDrawer : PropertyDrawer
     {
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var offset = property.FindPropertyRelative("offset");

@@ -20,21 +20,7 @@ namespace UniToolkit.Gameplay
             return (((1 << Other.layer) & mask) != 0);
         }
 
-        /// <summary>
-        /// Get's angle between two points and it's normal
-        /// </summary>
-        /// <param name="a">Point A</param>
-        /// <param name="b">Point B</param>
-        /// <param name="Normal">Normal</param>
-        /// <returns>Angle</returns>
-        public static float GetAngle(Vector3 a, Vector3 b, Vector3 Normal)
-        {
-            Vector3 Direction = b - a;
-            float angle = Vector3.Angle(Direction, Normal);
-            return angle;
-        }
-
-        public static T GetAddComponent<T>(this GameObject gameObject) where T : Component
+        public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
             T comp = gameObject.GetComponent<T>();
             if (comp != null )
@@ -51,7 +37,7 @@ namespace UniToolkit.Gameplay
         /// </summary>
         /// <param name="Min">Minimum value</param>
         /// <param name="Max">Maximun value</param>
-        public static void Clamp( this Vector3 vec , Vector3 Min , Vector3 Max)
+        public static void ClampVector( this Vector3 vec , Vector3 Min , Vector3 Max)
         {
             vec.Set(Mathf.Clamp(vec.x, Min.x, Max.x), Mathf.Clamp(vec.y, Min.y, Max.y), Mathf.Clamp(vec.z,
                 Min.z, Max.z)); 
