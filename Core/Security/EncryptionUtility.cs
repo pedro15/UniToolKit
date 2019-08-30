@@ -1,116 +1,123 @@
 using System.Text;
 using System.Security.Cryptography;
-using System.IO;
 using System;
 
 namespace UniToolkit.Security
 {
     public static class EncryptionUtility
     {
-        // You can reemplace this keys with your own keys...
+        private static int IV_LENGTH = 16;
 
-        private const string PasswordHash = "i0.1LT.h!3=tyRE@OhPRtX7";
-        private const string SaltKey = "3//hN[JX{RJqM!w]8LQ0xKvY";
-        private const string VIKey = "2e6c612b66td74qu";
-
-        #region API 
-
-        /// <summary>
-        /// Encrypt a string text
-        /// </summary>
-        /// <param name="plainText">String to encrypt</param>
-        /// <returns>Encrypted string</returns>
-        public static string EncryptString(string plainText)
+        private static string PASSWORD = "xrt2363.Q";
+        
+        public static void Init(string Password, int IVlength = 16)
         {
-            if (!string.IsNullOrEmpty(plainText))
+            PASSWORD = Password;
+            IV_LENGTH = IVlength;
+        }
+
+        private static byte[] GetSalt(string password)
+        {
+            using (var derivedBytes = new Rfc2898DeriveBytes(password, 16, 50000))
             {
-                byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-                byte[] encryptedbytes = EncryptByteArray(plainTextBytes);
-                return Convert.ToBase64String(encryptedbytes);
-            }else
-            {
-                return plainText;
+                return derivedBytes.GetBytes(16);
             }
         }
-        
-        /// <summary>
-        /// Decrypt a string
-        /// </summary>
-        /// <param name="encryptedText">String to decrypt</param>
-        /// <returns></returns>
-        public static string DecryptString(string encryptedText)
+
+        private static byte[] GetIV(byte[] data) 
         {
-            byte[] cipherTextBytes = Convert.FromBase64String(encryptedText);
-            int count = 0;
-            byte[] Decryptedbytes = DecryptByteArray(cipherTextBytes,out count);
-            return Encoding.UTF8.GetString(Decryptedbytes, 0, count).TrimEnd("\0".ToCharArray());
+            byte[] IV = new byte[IV_LENGTH];
+            
+            for (int i = 0; i < IV_LENGTH; i++)
+            {
+                IV[i] = data[i];
+            }
+
+            return IV;
+
         }
 
-        public static byte[] EncryptByteArray(byte[] data)
+        private static byte[] GenerateIV()
         {
-            byte[] cipherTextBytes = data;
-            if (data.Length > 0 )
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
             {
-                byte[] keyBytes = new Rfc2898DeriveBytes(PasswordHash, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
-                var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.Zeros };
-                var encryptor = symmetricKey.CreateEncryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
+                byte[] nonce = new byte[IV_LENGTH];
+                rng.GetBytes(nonce);
+                return nonce;
+            }
+        }
 
-                using (var memoryStream = new MemoryStream())
+        public static byte[] EncryptByteArray(byte[] data, string password)
+        {
+            if ( data != null && data.Length > 0)
+            {
+                byte[] originalBytes;
+                byte[] BytesAndIV;
+                using (var aes = Aes.Create())
                 {
-                    using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                    aes.KeySize = 256;
+                    aes.Mode = CipherMode.CBC;
+
+                    Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, HashPassword(password));
+
+                    aes.Key = pdb.GetBytes(aes.KeySize / 8);
+                    aes.IV = GenerateIV();
+
+                    using (var encryptor = aes.CreateEncryptor())
                     {
-                        cryptoStream.Write(data, 0, data.Length);
-                        cryptoStream.FlushFinalBlock();
-                        cipherTextBytes = memoryStream.ToArray();
-                        cryptoStream.Close();
+                        originalBytes = encryptor.TransformFinalBlock(data, 0, data.Length);
+                        BytesAndIV = new byte[originalBytes.Length + IV_LENGTH];
+                        aes.IV.CopyTo(BytesAndIV, 0);
+                        originalBytes.CopyTo(BytesAndIV, IV_LENGTH);
+                        return BytesAndIV;
                     }
-                    memoryStream.Close();
+
                 }
             }
-            return cipherTextBytes;
-        }
-        
-        public static byte[] DecryptByteArray(byte[] dataencrypted)
-        {
-            if (dataencrypted.Length > 0)
-            {
-                byte[] keyBytes = new Rfc2898DeriveBytes(PasswordHash, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
-                var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.None };
-                var decryptor = symmetricKey.CreateDecryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
-                var memoryStream = new MemoryStream(dataencrypted);
-                var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
-                byte[] plainTextBytes = new byte[dataencrypted.Length];
-                cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
-                memoryStream.Close();
-                cryptoStream.Close();
-                return plainTextBytes;
-            }
-            else
-            {
-                return dataencrypted;
-            }
+            throw new ArgumentException("data");
         }
 
-        public static byte[] DecryptByteArray(byte[] dataencrypted , out int descryptedbytecount)
+        public static byte[] EncryptByteArray(byte[] data )
         {
-            if (dataencrypted.Length > 0)
+            return EncryptByteArray(data, PASSWORD);
+        }
+
+        private static byte[] DecryptByteArray(byte[] dataencrypted, string password)
+        {
+            if (dataencrypted != null && dataencrypted.Length > 0)
             {
-                byte[] keyBytes = new Rfc2898DeriveBytes(PasswordHash, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
-                var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.None };
-                var decryptor = symmetricKey.CreateDecryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
-                var memoryStream = new MemoryStream(dataencrypted);
-                var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
-                byte[] plainTextBytes = new byte[dataencrypted.Length];
-                descryptedbytecount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
-                memoryStream.Close();
-                cryptoStream.Close();
-                return plainTextBytes;
+                if (dataencrypted.Length > 0)
+                {
+                    using (var aes = Aes.Create())
+                    {
+                        aes.KeySize = 256;
+                        aes.Mode = CipherMode.CBC;
+
+                        
+
+                        Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, HashPassword(password));
+
+                        aes.Key = pdb.GetBytes(aes.KeySize / 8);
+                        aes.IV = GetIV(dataencrypted);
+
+                        byte[] dataclean = new byte[dataencrypted.Length - IV_LENGTH];
+
+                        Array.Copy(dataencrypted, IV_LENGTH, dataclean, 0, dataencrypted.Length - IV_LENGTH);
+
+                        using (var decryptor = aes.CreateDecryptor())
+                        {
+                            return decryptor.TransformFinalBlock(dataclean, 0, dataclean.Length);
+                        }
+
+                    }
+                }
             }
-            else
-            {
-                descryptedbytecount = 0;
-                return dataencrypted;
-            }
+            throw new ArgumentException("dataencrypted");
+        }
+
+        public static byte[] DecryptByteArray(byte[] dataencrypted)
+        {
+            return DecryptByteArray(dataencrypted, PASSWORD);
         }
 
         public static byte[] StringToByeArray(string str)
@@ -123,6 +130,52 @@ namespace UniToolkit.Security
             return Encoding.ASCII.GetString(data);
         }
 
-        #endregion
+        private static byte[] HashPassword(string pw)
+        {
+            var md5 = MD5.Create();
+            return md5.ComputeHash(Encoding.ASCII.GetBytes(pw));
+        }
+
+        /// <summary>
+        /// Encrypt a string text
+        /// </summary>
+        /// <param name="plainText">String to encrypt</param>
+        /// <returns>Encrypted string</returns>
+        public static string EncryptString(string plainText , string password)
+        {
+            if (!string.IsNullOrEmpty(plainText))
+            {
+                byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+                byte[] encryptedbytes = EncryptByteArray(plainTextBytes , password);
+                return Convert.ToBase64String(encryptedbytes);
+            }
+            else
+            {
+                return plainText;
+            }
+        }
+
+        public static string EncryptString(string plainText)
+        {
+            return EncryptString(plainText, PASSWORD);
+        }
+
+        /// <summary>
+        /// Decrypt a string
+        /// </summary>
+        /// <param name="encryptedText">String to decrypt</param>
+        /// <returns></returns>
+        public static string DecryptString(string encryptedText, string password)
+        {
+            byte[] cipherTextBytes = Convert.FromBase64String(encryptedText);
+            byte[] Decryptedbytes = DecryptByteArray(cipherTextBytes, password);
+            return Encoding.UTF8.GetString(Decryptedbytes, 0, Decryptedbytes.Length).TrimEnd("\0".ToCharArray());
+        }
+
+        public static string DecryptString(string encryptedText)
+        {
+            return DecryptString(encryptedText, PASSWORD);
+        }
+
     }
 }

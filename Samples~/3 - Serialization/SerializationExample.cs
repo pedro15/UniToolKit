@@ -22,9 +22,9 @@ namespace UniToolkit.Examples
         [System.Serializable, XmlRoot("Person")]
         public class PersonXML
         {
-            [XmlArrayItem("Name", typeof(string))]
+            [XmlElement("Name")]
             public string Name;
-            [XmlArrayItem("Age", typeof(string))]
+            [XmlElement("Age")]
             public int Age;
 
             public override string ToString()

@@ -32,6 +32,7 @@ namespace UniToolkit.Serialization
         {
             if (File.Exists(FilePath)) File.Delete(FilePath);
             string _text = SerializeToJson(obj, IsEncrypted);
+            UnityEngine.Debug.Log(_text);
             File.WriteAllText(FilePath, _text);
         }
 

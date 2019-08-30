@@ -11,6 +11,7 @@ namespace UniToolkit.Serialization.Json
 
         public static T FromJSON<T>(string json)
         {
+            Debug.Log(json);
             return JsonUtility.FromJson<T>(json);
         }
     }
