@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace UniToolkit.Gameplay
@@ -41,6 +39,18 @@ namespace UniToolkit.Gameplay
         {
             vec.Set(Mathf.Clamp(vec.x, Min.x, Max.x), Mathf.Clamp(vec.y, Min.y, Max.y), Mathf.Clamp(vec.z,
                 Min.z, Max.z)); 
+        }
+
+        /// <summary>
+        /// Calculates direction to target vector based on axis normal
+        /// </summary>
+        /// <param name="target">Target Vector</param>
+        /// <param name="Normal">Axis normal</param>
+        public static Vector3 ComputeDirection(this Vector3 origin, Vector3 target , Vector3 Normal)
+        {
+            Vector3 dir = (target - origin);
+            dir.Scale(Normal);
+            return dir;
         }
     }
 }

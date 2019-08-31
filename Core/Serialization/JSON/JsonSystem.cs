@@ -1,18 +1,9 @@
-﻿using UnityEngine;
-
-namespace UniToolkit.Serialization.Json
+﻿namespace UniToolkit.Serialization.Json
 {
-    public static class JsonSystem
+    public interface IJsonParser
     {
-        public static string ToJSON(object obj)
-        {
-            return JsonUtility.ToJson(obj);
-        }
+        string ToJSON(object obj);
 
-        public static T FromJSON<T>(string json)
-        {
-            Debug.Log(json);
-            return JsonUtility.FromJson<T>(json);
-        }
+        T FromJSON<T>(string json);
     }
 }

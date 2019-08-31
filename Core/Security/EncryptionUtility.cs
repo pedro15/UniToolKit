@@ -10,10 +10,9 @@ namespace UniToolkit.Security
 
         private static string PASSWORD = "xrt2363.Q";
         
-        public static void Init(string Password, int IVlength = 16)
+        public static void Init(string Password)
         {
             PASSWORD = Password;
-            IV_LENGTH = IVlength;
         }
 
         private static byte[] GetSalt(string password)
@@ -47,6 +46,12 @@ namespace UniToolkit.Security
             }
         }
 
+        private static byte[] HashPassword(string pw)
+        {
+            var md5 = MD5.Create();
+            return md5.ComputeHash(Encoding.ASCII.GetBytes(pw));
+        }
+
         public static byte[] EncryptByteArray(byte[] data, string password)
         {
             if ( data != null && data.Length > 0)
@@ -74,7 +79,7 @@ namespace UniToolkit.Security
 
                 }
             }
-            throw new ArgumentException("data");
+            throw new ArgumentNullException("EncryptionUtility: Data null");
         }
 
         public static byte[] EncryptByteArray(byte[] data )
@@ -112,7 +117,7 @@ namespace UniToolkit.Security
                     }
                 }
             }
-            throw new ArgumentException("dataencrypted");
+            throw new ArgumentNullException("EncryptionUtility: DataEncrypted null");
         }
 
         public static byte[] DecryptByteArray(byte[] dataencrypted)
@@ -128,12 +133,6 @@ namespace UniToolkit.Security
         public static string ByteArrayToString(byte[] data)
         {
             return Encoding.ASCII.GetString(data);
-        }
-
-        private static byte[] HashPassword(string pw)
-        {
-            var md5 = MD5.Create();
-            return md5.ComputeHash(Encoding.ASCII.GetBytes(pw));
         }
 
         /// <summary>

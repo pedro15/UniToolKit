@@ -12,20 +12,30 @@ namespace UniToolkit.Serialization
     /// </summary>
     public static class JSONSerializer
     {
+
+        private static IJsonParser parser = new JsonUtilityParser();
+        
+        public static void OverrideParser(IJsonParser _parser)
+        {
+            if (_parser == null) throw new System.ArgumentNullException("JSONSerializer: Parser null");
+
+            parser = _parser;
+        }
+
         public static string SerializeToJson(object obj, bool IsEncrypted = false)
         {
             if (IsEncrypted)
-                return EncryptionUtility.EncryptString(JsonSystem.ToJSON(obj));
+                return EncryptionUtility.EncryptString(parser.ToJSON(obj));
             else
-                return JsonSystem.ToJSON(obj);
+                return parser.ToJSON(obj);
         }
 
         public static T DeserializeFromJson<T>(string Json, bool IsEncrypted = false)
         {
             if (IsEncrypted)
-                return JsonSystem.FromJSON<T>(EncryptionUtility.DecryptString(Json));
+                return parser.FromJSON<T>(EncryptionUtility.DecryptString(Json));
             else
-                return JsonSystem.FromJSON<T>(Json);
+                return parser.FromJSON<T>(Json);
         }
 
         public static void SerializeToFile(object obj, string FilePath, bool IsEncrypted = false)
