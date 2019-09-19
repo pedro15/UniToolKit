@@ -14,14 +14,9 @@ namespace UniToolkit.Security
 
         public SafeBool(bool value)
         {
-            rand = new Random(new Random(746876180).Next());
+            rand = new Random((int)DateTime.Now.Ticks);
             offset = rand.Next(-1000, +1000);
-            this.value = value ? 1 : 0 + offset;
-        }
-
-        public override string ToString()
-        {
-            return GetValue().ToString();
+            this.value = (value ? 1 : 0) + offset;
         }
 
         private bool GetValue()
@@ -29,14 +24,30 @@ namespace UniToolkit.Security
             return (value - offset) >= 1;
         }
 
-        public static implicit operator SafeBool (bool bb)
-        {
-            return new SafeBool(bb);
-        }
-
-        public static implicit operator bool(SafeBool sb)
+        public static implicit operator bool (SafeBool sb)
         {
             return sb.GetValue();
         }
+
+        public static implicit operator SafeBool (bool val)
+        {
+            return new SafeBool(val);
+        }
+
+        public override string ToString()
+        {
+            return GetValue().ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return GetValue().Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return GetValue().GetHashCode();
+        }
+
     }
 }
