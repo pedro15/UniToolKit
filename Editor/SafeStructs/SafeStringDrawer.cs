@@ -20,11 +20,11 @@ namespace UniToolkitEditor
 
             EditorGUI.BeginProperty(position, label, property);
 
-            string estring = EditorGUI.TextField(position, property.displayName, 
-                SafeString.UnSecureText(str.stringValue , off.intValue) );
-            
+            string estring = EditorGUI.TextField(position, property.displayName,
+                SafeString.UnSecureText(str.stringValue, off.intValue));
+
             str.stringValue = SafeString.SecureText(estring, off.intValue);
-            
+
             EditorGUI.EndProperty();
         }
     }

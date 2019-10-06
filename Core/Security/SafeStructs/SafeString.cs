@@ -1,13 +1,14 @@
 ﻿using System;
+using UniToolkit.Serialization.LitJSON;
 
 namespace UniToolkit.Security
 {
     [Serializable]
     public struct SafeString
     {
-        [UnityEngine.SerializeField, UnityEngine.HideInInspector]
+        [UnityEngine.SerializeField, UnityEngine.HideInInspector, JsonInclude]
         private string str;
-        [UnityEngine.SerializeField , UnityEngine.HideInInspector]
+        [UnityEngine.SerializeField, UnityEngine.HideInInspector, JsonInclude]
         private int offset;
 
         Random rand;
@@ -17,7 +18,7 @@ namespace UniToolkit.Security
             str = string.Empty;
             rand = new Random();
             offset = rand.Next(-1000, 1000);
-            str = SecureText(value , offset);
+            str = SecureText(value, offset);
         }
 
         private void Dispose()
@@ -30,9 +31,9 @@ namespace UniToolkit.Security
             return UnSecureText(str, offset);
         }
 
-        public static string SecureText(string str , int offset)
+        public static string SecureText(string str, int offset)
         {
-            string secstring = ""; 
+            string secstring = "";
             for (int i = 0; i < str.Length; i++)
             {
                 secstring += (char)(str[i] + offset);
@@ -40,7 +41,7 @@ namespace UniToolkit.Security
             return secstring;
         }
 
-        public static string UnSecureText(string str , int offset)
+        public static string UnSecureText(string str, int offset)
         {
             string unsec = "";
             for (int i = 0; i < str.Length; i++)
@@ -49,19 +50,19 @@ namespace UniToolkit.Security
             }
             return unsec;
         }
-        
+
         public override string ToString()
         {
             return GetValue();
         }
 
 
-        public static implicit operator SafeString (string s)
+        public static implicit operator SafeString(string s)
         {
             return new SafeString(s);
         }
 
-        public static implicit operator string (SafeString ss)
+        public static implicit operator string(SafeString ss)
         {
             return ss.GetValue();
         }

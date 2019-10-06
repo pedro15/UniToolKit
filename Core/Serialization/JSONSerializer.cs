@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using JsonUtility = UnityEngine.JsonUtility;
 using UniToolkit.Security;
-using UniToolkit.Serialization.Json;
+using UniToolkit.Serialization.LitJSON;
 
 namespace UniToolkit.Serialization
 {
@@ -12,30 +13,21 @@ namespace UniToolkit.Serialization
     /// </summary>
     public static class JSONSerializer
     {
-
-        private static IJsonParser parser = new JsonUtilityParser();
-        
-        public static void OverrideParser(IJsonParser _parser)
-        {
-            if (_parser == null) throw new System.ArgumentNullException("JSONSerializer: Parser null");
-
-            parser = _parser;
-        }
-
-        public static string SerializeToJson(object obj, bool IsEncrypted = false)
+        public static string SerializeToJson(object obj, bool IsEncrypted = false, bool UseUnitySerializer = false)
         {
             if (IsEncrypted)
-                return EncryptionUtility.EncryptString(parser.ToJSON(obj));
+                return EncryptionUtility.EncryptString(UseUnitySerializer? JsonUtility.ToJson(obj) : JsonMapper.ToJson(obj));
             else
-                return parser.ToJSON(obj);
+                return UseUnitySerializer? JsonUtility.ToJson(obj) : JsonMapper.ToJson(obj);
         }
 
-        public static T DeserializeFromJson<T>(string Json, bool IsEncrypted = false)
+        public static T DeserializeFromJson<T>(string Json, bool IsEncrypted = false, bool UseUnitySerializer = false)
         {
             if (IsEncrypted)
-                return parser.FromJSON<T>(EncryptionUtility.DecryptString(Json));
+                return  UseUnitySerializer? JsonUtility.FromJson<T>(EncryptionUtility.DecryptString(Json)) : 
+                    JsonMapper.ToObject<T>(EncryptionUtility.DecryptString(Json));
             else
-                return parser.FromJSON<T>(Json);
+                return UseUnitySerializer? JsonUtility.FromJson<T>(Json) : JsonMapper.ToObject<T>(Json);
         }
 
         public static void SerializeToFile(object obj, string FilePath, bool IsEncrypted = false)

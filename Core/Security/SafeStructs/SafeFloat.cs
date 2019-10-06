@@ -1,13 +1,14 @@
 ﻿using System;
+using UniToolkit.Serialization.LitJSON;
 
 namespace UniToolkit.Security
 {
     [Serializable]
     public struct SafeFloat
     {
-        [UnityEngine.SerializeField, UnityEngine.HideInInspector]
+        [UnityEngine.SerializeField, UnityEngine.HideInInspector, JsonInclude]
         private float offset;
-        [UnityEngine.SerializeField, UnityEngine.HideInInspector]
+        [UnityEngine.SerializeField, UnityEngine.HideInInspector, JsonInclude]
         private float value;
 
         private Random rand;
@@ -50,7 +51,7 @@ namespace UniToolkit.Security
             return new SafeFloat(v1.GetValue() / v2.GetValue());
         }
 
-        public static implicit operator SafeFloat (float fl)
+        public static implicit operator SafeFloat(float fl)
         {
             return new SafeFloat(fl);
         }
@@ -60,7 +61,7 @@ namespace UniToolkit.Security
             return new SafeFloat(ii);
         }
 
-        public static implicit operator float (SafeFloat sf)
+        public static implicit operator float(SafeFloat sf)
         {
             return sf.GetValue();
         }

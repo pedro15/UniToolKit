@@ -9,7 +9,7 @@ namespace UniToolkit.Security
         private static int IV_LENGTH = 16;
 
         private static string PASSWORD = "xrt2363.Q";
-        
+
         public static void Init(string Password)
         {
             PASSWORD = Password;
@@ -23,10 +23,10 @@ namespace UniToolkit.Security
             }
         }
 
-        private static byte[] GetIV(byte[] data) 
+        private static byte[] GetIV(byte[] data)
         {
             byte[] IV = new byte[IV_LENGTH];
-            
+
             for (int i = 0; i < IV_LENGTH; i++)
             {
                 IV[i] = data[i];
@@ -54,7 +54,7 @@ namespace UniToolkit.Security
 
         public static byte[] EncryptByteArray(byte[] data, string password)
         {
-            if ( data != null && data.Length > 0)
+            if (data != null && data.Length > 0)
             {
                 byte[] originalBytes;
                 byte[] BytesAndIV;
@@ -82,7 +82,7 @@ namespace UniToolkit.Security
             throw new ArgumentNullException("EncryptionUtility: Data null");
         }
 
-        public static byte[] EncryptByteArray(byte[] data )
+        public static byte[] EncryptByteArray(byte[] data)
         {
             return EncryptByteArray(data, PASSWORD);
         }
@@ -98,7 +98,7 @@ namespace UniToolkit.Security
                         aes.KeySize = 256;
                         aes.Mode = CipherMode.CBC;
 
-                        
+
 
                         Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(password, HashPassword(password));
 
@@ -140,12 +140,12 @@ namespace UniToolkit.Security
         /// </summary>
         /// <param name="plainText">String to encrypt</param>
         /// <returns>Encrypted string</returns>
-        public static string EncryptString(string plainText , string password)
+        public static string EncryptString(string plainText, string password)
         {
             if (!string.IsNullOrEmpty(plainText))
             {
                 byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-                byte[] encryptedbytes = EncryptByteArray(plainTextBytes , password);
+                byte[] encryptedbytes = EncryptByteArray(plainTextBytes, password);
                 return Convert.ToBase64String(encryptedbytes);
             }
             else

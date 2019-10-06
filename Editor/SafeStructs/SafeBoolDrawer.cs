@@ -15,8 +15,8 @@ namespace UniToolkitEditor
             float targetval = value.floatValue - offset.floatValue;
 
             EditorGUI.BeginProperty(position, label, property);
-            
-            targetval = EditorGUI.Toggle(position, property.displayName, targetval > 0 ? true : false ) ? 1 : 0;
+
+            targetval = EditorGUI.Toggle(position, property.displayName, targetval > 0 ? true : false) ? 1 : 0;
 
             if (GUI.changed)
             {

@@ -13,7 +13,7 @@ namespace UniToolkit.Gameplay
         /// <param name="mask">Reference LayerMask</param>
         /// <param name="Other">GameObject to check</param>
         /// <returns></returns>
-        public static bool CompareLayerMask(this GameObject Other , LayerMask mask)
+        public static bool CompareLayerMask(this GameObject Other, LayerMask mask)
         {
             return (((1 << Other.layer) & mask) != 0);
         }
@@ -21,10 +21,11 @@ namespace UniToolkit.Gameplay
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
             T comp = gameObject.GetComponent<T>();
-            if (comp != null )
+            if (comp != null)
             {
                 return comp;
-            }else
+            }
+            else
             {
                 return gameObject.AddComponent<T>();
             }
@@ -35,10 +36,10 @@ namespace UniToolkit.Gameplay
         /// </summary>
         /// <param name="Min">Minimum value</param>
         /// <param name="Max">Maximun value</param>
-        public static void ClampVector( this Vector3 vec , Vector3 Min , Vector3 Max)
+        public static void ClampVector(this Vector3 vec, Vector3 Min, Vector3 Max)
         {
             vec.Set(Mathf.Clamp(vec.x, Min.x, Max.x), Mathf.Clamp(vec.y, Min.y, Max.y), Mathf.Clamp(vec.z,
-                Min.z, Max.z)); 
+                Min.z, Max.z));
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace UniToolkit.Gameplay
         /// </summary>
         /// <param name="target">Target Vector</param>
         /// <param name="Normal">Axis normal</param>
-        public static Vector3 ComputeDirection(this Vector3 origin, Vector3 target , Vector3 Normal)
+        public static Vector3 ComputeDirection(this Vector3 origin, Vector3 target, Vector3 Normal)
         {
             Vector3 dir = (target - origin);
             dir.Scale(Normal);

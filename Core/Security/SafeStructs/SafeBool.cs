@@ -1,13 +1,14 @@
 ﻿using System;
+using UniToolkit.Serialization.LitJSON;
 
 namespace UniToolkit.Security
 {
     [Serializable]
     public struct SafeBool
     {
-        [UnityEngine.SerializeField, UnityEngine.HideInInspector]
-        private float offset;
-        [UnityEngine.SerializeField, UnityEngine.HideInInspector]
+        [UnityEngine.SerializeField, UnityEngine.HideInInspector, JsonInclude]
+        public float offset;
+        [UnityEngine.SerializeField, UnityEngine.HideInInspector, JsonInclude]
         private float value;
 
         private Random rand;
@@ -24,12 +25,12 @@ namespace UniToolkit.Security
             return (value - offset) >= 1;
         }
 
-        public static implicit operator bool (SafeBool sb)
+        public static implicit operator bool(SafeBool sb)
         {
             return sb.GetValue();
         }
 
-        public static implicit operator SafeBool (bool val)
+        public static implicit operator SafeBool(bool val)
         {
             return new SafeBool(val);
         }
