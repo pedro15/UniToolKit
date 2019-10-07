@@ -9,10 +9,12 @@ namespace UniToolkit.Security
         private static int IV_LENGTH = 16;
 
         private static string PASSWORD = "xrt2363.Q";
+        private static byte XORConstant = 0x53;
 
-        public static void Init(string Password)
+        public static void Init(string Password , byte XORconstant = 0x53)
         {
             PASSWORD = Password;
+            XORConstant = XORconstant;
         }
 
         private static byte[] GetSalt(string password)
@@ -174,6 +176,28 @@ namespace UniToolkit.Security
         public static string DecryptString(string encryptedText)
         {
             return DecryptString(encryptedText, PASSWORD);
+        }
+
+        public static string XOREncrypt(string input)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(input);
+            return Convert.ToBase64String(XOROperation(data));
+        }
+
+        public static string XORDecrypt(string src)
+        {
+            byte[] data = Convert.FromBase64String(src);
+            return Encoding.UTF8.GetString(XOROperation(data));
+        }
+
+        private static byte[] XOROperation(byte[] data)
+        {
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = (byte)(data[i] ^ XORConstant);
+            }
+
+            return data;
         }
 
     }
