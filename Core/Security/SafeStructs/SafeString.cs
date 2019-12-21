@@ -1,14 +1,13 @@
 ﻿using System;
-using UniToolkit.Serialization.LitJSON;
 
 namespace UniToolkit.Security
 {
     [Serializable]
     public struct SafeString
     {
-        [UnityEngine.SerializeField, UnityEngine.HideInInspector, JsonInclude]
+        [UnityEngine.SerializeField, UnityEngine.HideInInspector]
         private string str;
-        [UnityEngine.SerializeField, UnityEngine.HideInInspector, JsonInclude]
+        [UnityEngine.SerializeField, UnityEngine.HideInInspector]
         private int offset;
 
         Random rand;
